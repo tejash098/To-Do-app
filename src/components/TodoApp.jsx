@@ -1,68 +1,66 @@
 import React, { useState } from "react";
+import "./TodoApp.css";
 
 const TodoApp = () => {
   const [list, setList] = useState([]);
   const [value, setValue] = useState("");
+  const [dueDate, setDueDate] = useState("");
 
-  const handleSubmit = (e) => {
+  const hdlSubmit = (e) => {
     e.preventDefault();
-    if (value.trim() !== "") {
-      setList([...list, { text: value, completed: false }]);
-      setValue("");
-    }
+    if (!value.trim()) return;
+
+    setList([...list, { text: value, status: false, dueDate: dueDate }]);
+    setValue("");
+    setDueDate("");
   };
 
-  const handleRemove = (index) => {
-    const newList = [...list];
-    newList.splice(index, 1);
+  const hdlCheck = (idx) => {
+    const newList = list.map((item, i) =>
+      i === idx ? { ...item, status: !item.status } : item
+    );
     setList(newList);
   };
 
-  const handleCheckboxChange = (index) => {
-    const newList = [...list];
-    newList[index].completed = !newList[index].completed;
-    setList(newList);
+  const hdlDelete = (idx) => {
+    setList(list.filter((_, i) => i !== idx));
   };
 
   return (
-    <>
-      <div className="body">
-        <h1>TODO APP</h1>
+    <div className="todoapp">
+      <h1>Manage your daily todo list.</h1>
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="todo">Add Todo: </label>
-          <input
-            type="text"
-            id="todo"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <button type="submit">Add</button>
-        </form>
+      <form onSubmit={hdlSubmit}>
+        <label htmlFor="todo">Add Todo:</label>
+        <input
+          type="text"
+          id="todo"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <label htmlFor="duedate">Due Date:</label>
+        <input type="date" id="duedate" value={dueDate} onChange={(e) => setDueDate(e.target.value)}/>
+        <button type="submit">Add</button>
+      </form>
 
-        <ul>
-          {list.map((item, index) => (
-            <li key={index}>
-              <input
-                type="checkbox"
-                checked={item.completed}
-                onChange={() => handleCheckboxChange(index)}
-              />
+      <ul>
+        {list.map((item, idx) => (
+          <li key={idx}>
+            <input
+              type="checkbox"
+              checked={item.status}
+              onChange={() => hdlCheck(idx)}
+            />
 
-              <span
-                style={{
-                  textDecoration: item.completed ? "line-through" : "none",
-                }}
-              >
-                {item.text}
-              </span>
-
-              <button onClick={() => handleRemove(index)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+            <span className={item.status ? "completed" : ""}>{item.text}</span>
+            <span>{item.status ? "Completed" : "Pending"}</span>
+            <span>Created on: {new Date().toLocaleDateString()}</span>
+            <span>Due Date: {item.dueDate}</span>
+            <button onClick={() => hdlDelete(idx)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
