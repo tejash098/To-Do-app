@@ -1,3 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #212121;
+}
 .todoapp {
   display: flex;
   justify-content: center;
@@ -41,6 +51,12 @@
     }
     input[type="date"] {
       width: 12vw;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      -webkit-appearance: button;
+      background-color: #4a90e2;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
     button {

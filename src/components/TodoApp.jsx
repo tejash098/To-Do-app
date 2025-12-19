@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./TodoApp.css";
 
 const TodoApp = () => {
   const [list, setList] = useState([]);
